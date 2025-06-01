@@ -1,0 +1,4 @@
+node_modules
+.env
+serviceAccountKey.json
+test-client.js
