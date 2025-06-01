@@ -29,7 +29,7 @@ app.use(
       if (
         origin.startsWith("http://localhost") ||
         origin.startsWith("https://localhost") ||
-        origin.startsWith(allowedOrigin)
+        origin === allowedOrigin
       ) {
         return callback(null, true);
       }
