@@ -3,12 +3,12 @@ const jwt = require("jsonwebtoken");
 const db = require("../firebase/firebase");
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { displayName, password } = req.body;
 
   try {
     const snapshot = await db
       .collection("users")
-      .where("email", "==", email)
+      .where("username", "==", displayName.toLowerCase())
       .get();
 
     if (snapshot.empty)
@@ -25,18 +25,16 @@ const login = async (req, res) => {
       expiresIn: "24h",
     });
 
-    // Enviar token en cookie HttpOnly
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Solo HTTPS en producción
-      sameSite: "strict", // Protege contra CSRF
-      maxAge: 2 * 60 * 60 * 1000, // 2 horas en milisegundos
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 4 * 60 * 60 * 1000, // 4 hours of lifespan
     });
 
-    // Puedes enviar un mensaje de éxito en el body
     res.json({ message: "Login succesfull" });
   } catch (error) {
-    console.error("Error en login:", error);
+    console.error("Error in login:", error);
     res.status(500).json({ error: "Server error" });
   }
 };
