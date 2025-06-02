@@ -46,7 +46,7 @@ app.use("/users", verifyToken, usersRouter);
 // inside your Socket.IO setup
 initSocket(server);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
