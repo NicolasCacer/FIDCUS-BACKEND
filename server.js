@@ -33,6 +33,7 @@ const registerRouter = require("./routes/register");
 const loginRouter = require("./routes/login");
 const usersRouter = require("./routes/user");
 const logoutRouter = require("./routes/logout");
+const roomsRouter = require("./routes/rooms");
 const verifyToken = require("./middleware/verifyToken");
 
 // Public routes
@@ -42,6 +43,7 @@ app.use("/logout", logoutRouter);
 
 // Protected routes
 app.use("/users", verifyToken, usersRouter);
+app.use("/rooms", verifyToken, roomsRouter);
 
 // inside your Socket.IO setup
 initSocket(server);

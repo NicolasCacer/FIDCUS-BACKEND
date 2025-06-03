@@ -14,6 +14,17 @@ function initSocket(server) {
   io.on("connection", (socket) => {
     console.log("New client connected:", socket.id);
 
+    let rooms = []; // memoria compartida para rooms (solo temporal, usar DB en producción)
+
+    socket.on("createRoom", (room) => {
+      console.log("Room created:", room);
+      rooms.push(room);
+      io.emit("newRoom", room); // Emite a todos los clientes conectados
+    });
+
+    // Envía rooms actuales al nuevo cliente
+    socket.emit("initialRooms", rooms);
+
     socket.on("joinRoom", (roomId) => {
       console.log(`${socket.id} joined room ${roomId}`);
       socket.join(roomId);
