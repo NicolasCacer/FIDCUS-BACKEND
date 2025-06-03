@@ -19,10 +19,10 @@ function initSocket(server) {
       socket.join(roomId);
     });
 
-    socket.on("sendMessage", ({ roomId, message }) => {
-      console.log(`Message in ${roomId}: ${message}`);
+    socket.on("sendMessage", ({ roomId, sender, message }) => {
+      console.log(`Message in ${roomId} from ${sender}: ${message}`);
       io.to(roomId).emit("message", {
-        sender: socket.id,
+        sender,
         message,
       });
     });
