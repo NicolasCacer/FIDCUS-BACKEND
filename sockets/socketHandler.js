@@ -1,6 +1,18 @@
 const { Server } = require("socket.io");
 const dotenv = require("dotenv");
+const { fetchRooms, createRoom } = require("../controllers/rooms");
 dotenv.config();
+
+let rooms = [];
+
+async function loadRoomsFromDB() {
+  try {
+    rooms = await fetchRooms();
+    console.log("Rooms loaded from DB:", rooms);
+  } catch (err) {
+    console.error("Error loading rooms from DB:", err);
+  }
+}
 
 function initSocket(server) {
   const io = new Server(server, {
@@ -11,19 +23,17 @@ function initSocket(server) {
     },
   });
 
+  loadRoomsFromDB();
+
   io.on("connection", (socket) => {
     console.log("New client connected:", socket.id);
-
-    let rooms = []; // memoria compartida para rooms (solo temporal, usar DB en producción)
+    socket.emit("initialRooms", rooms);
 
     socket.on("createRoom", (room) => {
       console.log("Room created:", room);
       rooms.push(room);
-      io.emit("newRoom", room); // Emite a todos los clientes conectados
+      io.emit("newRoom", room);
     });
-
-    // Envía rooms actuales al nuevo cliente
-    socket.emit("initialRooms", rooms);
 
     socket.on("joinRoom", (roomId) => {
       console.log(`${socket.id} joined room ${roomId}`);
