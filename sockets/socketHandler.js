@@ -1,6 +1,6 @@
 const { Server } = require("socket.io");
 const dotenv = require("dotenv");
-const { fetchRooms, createRoom } = require("../controllers/rooms");
+const { fetchRooms } = require("../controllers/rooms");
 dotenv.config();
 
 let rooms = [];
