@@ -43,7 +43,7 @@ app.use("/logout", logoutRouter);
 
 // Protected routes
 app.use("/users", verifyToken, usersRouter);
-app.use("/rooms", verifyToken, roomsRouter);
+app.use("/rooms", roomsRouter);
 
 // inside your Socket.IO setup
 initSocket(server);
