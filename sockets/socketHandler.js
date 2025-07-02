@@ -152,7 +152,6 @@ function initSocket(server) {
       const board = game.board;
       const cell = board[y][x];
 
-      // Validar movimiento
       if (cell.color !== null && cell.color !== playerColor) return;
 
       cell.value += 1;
@@ -162,9 +161,17 @@ function initSocket(server) {
         io.to(roomId).emit("cellExploding", id);
       };
 
-      await propagate(x, y, board, playerColor, emitExploding, io, roomId);
+      const hadExplosions = await propagate(
+        x,
+        y,
+        board,
+        playerColor,
+        emitExploding
+      );
 
-      // Verificar si alguien ganó
+      // Esperar un poco más si hubo explosiones para que la animación termine
+      if (hadExplosions) await delay(1000);
+
       const winner = checkWinner(board);
       if (winner) {
         game.winner = winner;
